@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProductOrder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,4 +17,8 @@ class Order extends Model
         'status',
         'is_delivered'
     ];
+
+    public function productOrders() {
+        return $this->hasMany(ProductOrder::class);
+    }
 }
