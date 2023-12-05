@@ -18,13 +18,11 @@ class ProductController extends Controller
                 'status' => 200,
                 'products' => $products
             ], 200);
-        } 
-        else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'No products found!'
-            ], 404);
         }
+        return response()->json([
+            'status' => 404,
+            'message' => 'No products found!'
+        ], 404);
     }
     
     public function store(Request $request) {
