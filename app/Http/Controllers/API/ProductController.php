@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    //
-
-
     public function index() {
         $products = Product::all();
         if($products->count() > 0) {
@@ -24,12 +21,14 @@ class ProductController extends Controller
             'message' => 'No products found!'
         ], 404);
     }
-    
+
     public function store(Request $request) {
+        // add product category
         $validator  = Validator::make($request->all(), [
             'name' => 'required|unique:products|max:255',
             'productId' => 'required|unique:products|max:255',
             'description'=> 'required',
+            'category'=> 'required',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
         ]);
@@ -44,11 +43,12 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $request->name,
             'productId' => $request->productId,
+            'category' => $request->category,
             'description' => $request->description,
             'quantity' => $request->quantity,
             'price' => $request->price,
         ]);
-        
+
         if($product) {
             return response()->json([
                 'status'=> 200,
@@ -70,7 +70,7 @@ class ProductController extends Controller
                 'status' => 200,
                 'product' => $product
             ], 200);
-        } 
+        }
         else {
             return response()->json([
                 'status' => 404,
@@ -84,6 +84,7 @@ class ProductController extends Controller
             'name' => 'required|unique:products|max:255',
             'productId' => 'required|max:255',
             'description'=> 'required',
+            'category'=> 'required',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
         ]);
@@ -103,6 +104,7 @@ class ProductController extends Controller
                 'productId' => $request->productId,
                 'description' => $request->description,
                 'quantity' => $request->quantity,
+                'category' => $request->category,
                 'price' => $request->price,
             ]);
 
