@@ -23,7 +23,7 @@ class ProductController extends Controller
     }
 
     public function store(Request $request) {
-        // add product category
+
         $validator  = Validator::make($request->all(), [
             'name' => 'required|unique:products|max:255',
             'productId' => 'required|unique:products|max:255',
@@ -31,6 +31,7 @@ class ProductController extends Controller
             'category'=> 'required',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
+            'images' => 'required|array'
         ]);
 
         if($validator->fails()) {
@@ -40,6 +41,7 @@ class ProductController extends Controller
             ], 422);
         }
 
+
         $product = Product::create([
             'name' => $request->name,
             'productId' => $request->productId,
@@ -47,6 +49,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'quantity' => $request->quantity,
             'price' => $request->price,
+            'images' => $request->images
         ]);
 
         if($product) {
