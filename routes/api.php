@@ -21,6 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Auth
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']);
+
+// Test
+// Route::middleware('auth:api')->get('/test', function(Request $request) {
+//     return 'hello';
+// });
+
 // Images
 Route::post('images/products', [ImageController::class, 'store']);
 // Products
