@@ -54,7 +54,7 @@ class ProductController extends Controller
 
         if($product) {
             return response()->json([
-                'status'=> 200,
+                'status'=> 201,
                 'message' => 'Successfully added product to product list.'
             ], 200);
         }
@@ -84,12 +84,13 @@ class ProductController extends Controller
 
     public function edit(Request $request, int $id) {
         $validator  = Validator::make($request->all(), [
-            'name' => 'required|unique:products|max:255',
+            'name' => 'required|max:255',
             'productId' => 'required|max:255',
             'description'=> 'required',
             'category'=> 'required',
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
+            'images' => 'required|array',
         ]);
 
         if($validator->fails()) {
@@ -109,6 +110,7 @@ class ProductController extends Controller
                 'quantity' => $request->quantity,
                 'category' => $request->category,
                 'price' => $request->price,
+                'images' => $request->images
             ]);
 
             return response()->json([
