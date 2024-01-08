@@ -16,7 +16,7 @@ class ProductOrderController extends Controller
                 'status' => 200,
                 'productOrders' => $product_orders
             ], 200);
-        } 
+        }
         return response()->json([
             'status' => 404,
             'message' => 'No product orders found!'
@@ -29,32 +29,30 @@ class ProductOrderController extends Controller
         if(!$order){
             return response()->json([
                 'status' => 404,
-                'message' => 'No or invalid Order'
+                'error' => 'Invalid Order'
             ], 404);
         }
 
         $product_orders = [];
-        $total = 0;
 
         foreach ($request->products as $key=>$product){
             $product_order = Product::find($product['id']);
             if($product_order && $product_order->quantity >= $product['quantity'] ) {
-                $total+= $product['total'];
                 array_push($product_orders, $request->products[$key]);
-            } 
+            }
             else if ($product_order && $product_order->quantity < $product['quantity'] ) {
                 return response()-> json([
                     'status'=> 422,
                     'errors'=>'Order invalid. Product quantity insuffucient',
                 ], 422);
-            } 
+            }
             else {
                 return response()-> json([
                     'status'=> 422,
                     'errors'=>'Order Invalid. Product not found',
                 ], 422);
             }
-           
+
         }
 
         $new_product_orders = [];
@@ -63,20 +61,18 @@ class ProductOrderController extends Controller
             foreach($product_orders as $product) {
                 $new_product_order = ProductOrder::create([
                     'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'quantity' => $product->quantity,
-                    'total'=> $product->total
+                    'product_id' => $product['id'],
+                    'quantity' => $product['quantity'],
+                    'total'=> $product['total']
                 ]);
                 if(!$new_product_order) {
                     return response()->json([
                         'status'=> 500,
-                        'message' => 'Internal Server Error'
+                        'error' => 'Internal Server Error'
                     ], 500);
                 }
                 array_push($new_product_orders, $new_product_order);
             }
-            $order->totalAmount = $total;
-            $order->save();
         }
 
         if(count($new_product_orders) == count($request->products)) {
@@ -88,7 +84,7 @@ class ProductOrderController extends Controller
         }
         return response()->json([
             'status'=> 500,
-            'message' => 'Internal Server Error'
+            'error' => 'Internal Server Error'
         ], 500);
     }
 
@@ -99,7 +95,7 @@ class ProductOrderController extends Controller
             $product_order->delete();
             return response()->json([
                 'status' => 204,
-                'message' => 'Product order removed'
+                'error' => 'Product order removed'
             ], 200);
         }
 
@@ -118,7 +114,7 @@ class ProductOrderController extends Controller
                 'status' => 200,
                 'productOrder' => $product_order
             ], 200);
-        } 
+        }
         return response()->json([
             'status' => 404,
             'message' => 'No such product order found'
