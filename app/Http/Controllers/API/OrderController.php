@@ -15,7 +15,7 @@ class OrderController extends Controller
                 'status' => 200,
                 'orders' => $orders
             ], 200);
-        } 
+        }
         return response()->json([
             'status' => 404,
             'message' => 'No orders found!'
@@ -24,8 +24,10 @@ class OrderController extends Controller
 
     public function store(Request $request) {
         $validator  = Validator::make($request->all(), [
+            'user' => 'required|numeric',
             'address' => 'required|string|max:255',
-            'contactNumber' => 'required|digits:10',
+            'contactNumber' => 'required|string|min:11',
+            'totalAmount' => 'required|numeric',
         ]);
 
         if($validator->fails()) {
@@ -36,10 +38,10 @@ class OrderController extends Controller
         }
 
         $order = Order::create([
+            'user_id' => $request->user,
             'address' => $request->address,
             'contactNumber' => $request->contactNumber,
-            'quantity' => $request->description,
-            'totalAmount' => 0,
+            'totalAmount' => $request->totalAmount,
             'status'=> 'pending',
             'is_delivered'=> false
         ]);
@@ -47,14 +49,15 @@ class OrderController extends Controller
         if($order) {
             return response()->json([
                 'status'=> 200,
-                'message' => 'Successfully added order to pending orders list.'
+                'message' => 'Successfully added order to pending orders list.',
+                'id'=>$order->id
             ], 201);
         }
 
         return response()->json([
             'status'=> 500,
             'message' => 'Internal Server Error'
-        ], 500);      
+        ], 500);
     }
 
     public function show($id) {
@@ -64,7 +67,7 @@ class OrderController extends Controller
                 'status' => 200,
                 'order' => $order
             ], 200);
-        } 
+        }
         return response()->json([
             'status' => 404,
             'message' => 'No such order found'
