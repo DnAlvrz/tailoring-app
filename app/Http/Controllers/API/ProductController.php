@@ -22,6 +22,20 @@ class ProductController extends Controller
         ], 404);
     }
 
+    public function category (string $category) {
+        $products = Product::where('category', $category)->get();
+        if($products->count() > 0) {
+            return response()->json([
+                'status' => 200,
+                'products' => $products->toArray()
+            ], 200);
+        }
+        return response()->json([
+            'status' => 404,
+            'message' => 'No products found!'
+        ], 404);
+    }
+
     public function store(Request $request) {
 
         $validator  = Validator::make($request->all(), [
@@ -140,6 +154,4 @@ class ProductController extends Controller
             'message' => 'No such product found'
         ], 404);
     }
-
-
 }
