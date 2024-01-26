@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     public function index() {
-        $orders = Order::all();
+        $orders = Order::with('user','productOrders')->get();
         if($orders->count() > 0) {
             return response()->json([
                 'status' => 200,
@@ -72,6 +72,26 @@ class OrderController extends Controller
             'status' => 404,
             'message' => 'No such order found'
         ], 404);
+    }
+
+
+    public function updateStatus(Request $request, int $id) {
+        $order = Order::find($id);
+        if(!$order) {
+           return response()->json([
+            'status'=> 404,
+            'message' => 'No such order found'
+        ], 404);
+        }
+
+        $order->update([
+            'status'=> $request->status,
+        ]);
+
+        return response()->json([
+            'status'=> 200,
+            'message' => 'Successfully updated order.'
+        ], 200);
     }
 
     public function edit(Request $request, int $id) {

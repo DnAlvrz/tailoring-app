@@ -14,6 +14,7 @@ class ProductOrder extends Model
         'order_id',
         'product_id',
         'quantity',
-        'total'
+        'name',
+        'total',
     ];
 }

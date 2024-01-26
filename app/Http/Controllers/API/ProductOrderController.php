@@ -61,6 +61,7 @@ class ProductOrderController extends Controller
             foreach($product_orders as $product) {
                 $new_product_order = ProductOrder::create([
                     'order_id' => $order->id,
+                    'name' => $product['name'],
                     'product_id' => $product['id'],
                     'quantity' => $product['quantity'],
                     'total'=> $product['total']
