@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
-
+use App\Models\ProductOrder;
 class ProductController extends Controller
 {
     public function index() {
@@ -81,11 +81,23 @@ class ProductController extends Controller
 
     public function show($id) {
         $product = Product::find($id);
+        $productOrders = ProductOrder::with(['order', 'order.rating'])->where('product_id', '=', $id)->get();
+        $index = 0;
+        $averageReviews = 0;
+        foreach ($productOrders as $productOrder) {
+            if(isset($productOrder->order->rating) && isset($productOrder->order->rating->rating)){
+               $averageReviews += $productOrder->order->rating->rating;
+               $index++;
+            }
+
+        }
 
         if($product) {
             return response()->json([
                 'status' => 200,
-                'product' => $product
+                'product' => $product,
+                'reviews'=>$productOrders,
+                'averageReviews'=>$averageReviews/$index
             ], 200);
         }
         else {
