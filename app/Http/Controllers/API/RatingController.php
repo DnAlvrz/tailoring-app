@@ -3,49 +3,31 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Models\OrderRating;
 
 class RatingController extends Controller
 {
     //
     public function index() {
-        $products = Product::all();
-        if($products->count() > 0) {
+        $ratings = OrderRating::all();
+        if($ratings->count() > 0) {
             return response()->json([
                 'status' => 200,
-                'products' => $products
+                'ratings' => $ratings
             ], 200);
         }
         return response()->json([
             'status' => 404,
-            'message' => 'No products found!'
-        ], 404);
-    }
-
-    public function category (string $category) {
-        $products = Product::where('category', $category)->get();
-        if($products->count() > 0) {
-            return response()->json([
-                'status' => 200,
-                'products' => $products->toArray()
-            ], 200);
-        }
-        return response()->json([
-            'status' => 404,
-            'message' => 'No products found!'
+            'message' => 'No ratings found!'
         ], 404);
     }
 
     public function store(Request $request) {
-
         $validator  = Validator::make($request->all(), [
-            'name' => 'required|unique:products|max:255',
-            'productId' => 'required|unique:products|max:255',
-            'description'=> 'required',
-            'category'=> 'required',
-            'quantity' => 'required|numeric',
-            'price' => 'required|numeric',
-            'images' => 'required|array'
+            'order_id' => 'required|numeric',
+            'rating'=> 'required|numeric',
         ]);
 
         if($validator->fails()) {
@@ -56,20 +38,17 @@ class RatingController extends Controller
         }
 
 
-        $product = Product::create([
-            'name' => $request->name,
-            'productId' => $request->productId,
-            'category' => $request->category,
-            'description' => $request->description,
-            'quantity' => $request->quantity,
-            'price' => $request->price,
-            'images' => $request->images
+        $rating = OrderRating::create([
+            'order_id' => $request->order_id,
+            'rating' => $request->rating,
+            'message' => isset($request->message) ? $request->message : '' ,
+
         ]);
 
-        if($product) {
+        if($rating) {
             return response()->json([
                 'status'=> 201,
-                'message' => 'Successfully added product to product list.'
+                'message' => 'Successfully added rating to order.'
             ], 200);
         }
 
@@ -80,31 +59,25 @@ class RatingController extends Controller
     }
 
     public function show(int $id) {
-        $product = Product::find($id);
+        $rating = OrderRating::find($id);
 
         if($product) {
             return response()->json([
                 'status' => 200,
-                'product' => $product
+                'rating' => $rating
             ], 200);
         }
         else {
             return response()->json([
                 'status' => 404,
-                'message' => 'No such product found'
+                'message' => 'No such rating found'
             ], 404);
         }
     }
 
     public function edit(Request $request, int $id) {
         $validator  = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'productId' => 'required|max:255',
-            'description'=> 'required',
-            'category'=> 'required',
-            'quantity' => 'required|numeric',
-            'price' => 'required|numeric',
-            'images' => 'required|array',
+            'rating' => 'required|numeric',
         ]);
 
         if($validator->fails()) {
@@ -114,22 +87,17 @@ class RatingController extends Controller
             ], 422);
         }
 
-        $product = Product::find($id);
+        $rating = OrderRating::find($id);
 
-        if($product) {
-            $product->update([
-                'name' => $request->name,
-                'productId' => $request->productId,
-                'description' => $request->description,
-                'quantity' => $request->quantity,
-                'category' => $request->category,
-                'price' => $request->price,
-                'images' => $request->images
+        if($rating) {
+            $rating->update([
+                'rating' => $request->rating,
+                'message' => isset($request->message) ? $request->message : '' ,
             ]);
 
             return response()->json([
                 'status'=> 200,
-                'message' => 'Successfully updated product.'
+                'message' => 'Successfully updated rating.'
             ], 200);
         }
 
@@ -140,9 +108,9 @@ class RatingController extends Controller
     }
 
     public function destroy ($id) {
-        $product = Product::find($id);
-        if($product){
-            $product->delete();
+        $rating = OrderRating::find($id);
+        if($rating){
+            $rating->delete();
             return response()->json([
                 'status' => 204,
                 'message' => 'Rating removed'
