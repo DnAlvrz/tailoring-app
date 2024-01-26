@@ -57,6 +57,11 @@ Route::get('product-orders/{id}', [ProductOrderController::class, 'show']);
 Route::put('product-orders/{id}', [ProductOrderController::class, 'edit']);
 Route::delete('product-orders/{id}', [ProductOrderController::class, 'destroy']);
 
+Route::get('rating/', [RatingController::class, 'index']);
+Route::post('rating/', [RatingController::class, 'store']);
+Route::get('rating/{id}', [RatingController::class, 'show']);
+Route::put('rating/{id}', [RatingController::class, 'edit']);
+Route::delete('rating/{id}', [RatingController::class, 'destroy']);
 
 //User
 Route::get('user/{id}/orders', [UserController::class, 'userOrders']);
