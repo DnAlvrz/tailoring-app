@@ -16,5 +16,6 @@ class ProductOrder extends Model
         'quantity',
         'name',
         'total',
+        'image',
     ];
 }

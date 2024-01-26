@@ -79,7 +79,7 @@ class RatingController extends Controller
         ], 500);
     }
 
-    public function show($id) {
+    public function show(int $id) {
         $product = Product::find($id);
 
         if($product) {

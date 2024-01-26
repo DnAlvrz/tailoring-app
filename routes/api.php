@@ -48,6 +48,7 @@ Route::get('orders/{id}', [OrderController::class, 'show']);
 Route::put('orders/{id}', [OrderController::class, 'edit']);
 Route::delete('orders/{id}', [OrderController::class, 'destroy']);
 Route::put('orders/{id}/status', [OrderController::class, 'updateStatus']);
+Route::put('orders/{userId}/', [OrderController::class, 'userOrders']);
 
 // Product orders
 Route::get('product-orders/', [ProductOrderController::class, 'index']);
@@ -55,3 +56,7 @@ Route::post('product-orders/', [ProductOrderController::class, 'store']);
 Route::get('product-orders/{id}', [ProductOrderController::class, 'show']);
 Route::put('product-orders/{id}', [ProductOrderController::class, 'edit']);
 Route::delete('product-orders/{id}', [ProductOrderController::class, 'destroy']);
+
+
+//User
+Route::get('user/{id}/orders', [UserController::class, 'userOrders']);

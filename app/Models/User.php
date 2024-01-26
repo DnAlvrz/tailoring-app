@@ -13,7 +13,7 @@ use App\Models\Order;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    protected  $primaryKey = 'id';
     /**
      * The attributes that are mass assignable.
      *
@@ -52,4 +52,8 @@ class User extends Authenticatable
      public function orders(): HasMany {
         return $this->hasMany(Order::class, 'user_id', 'id');
     }
+    public function product_orders()
+{
+    return $this->hasManyThrough('App\ProductOrders', 'App\Order');
+}
 }
