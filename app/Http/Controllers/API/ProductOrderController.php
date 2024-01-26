@@ -37,8 +37,10 @@ class ProductOrderController extends Controller
 
         foreach ($request->products as $key=>$product){
             $product_order = Product::find($product['id']);
+            $product =  $request->products[$key];
             if($product_order && $product_order->quantity >= $product['quantity'] ) {
-                array_push($product_orders, $request->products[$key]);
+                $product['image'] = $product_order['images'][0]['name'];
+                array_push($product_orders, $product);
             }
             else if ($product_order && $product_order->quantity < $product['quantity'] ) {
                 return response()-> json([
@@ -64,7 +66,8 @@ class ProductOrderController extends Controller
                     'name' => $product['name'],
                     'product_id' => $product['id'],
                     'quantity' => $product['quantity'],
-                    'total'=> $product['total']
+                    'total'=> $product['total'],
+                    'image'=>$product['image']
                 ]);
                 if(!$new_product_order) {
                     return response()->json([
