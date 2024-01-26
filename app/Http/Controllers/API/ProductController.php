@@ -81,7 +81,7 @@ class ProductController extends Controller
 
     public function show($id) {
         $product = Product::find($id);
-        $productOrders = ProductOrder::with(['order', 'order.rating'])->where('product_id', '=', $id)->get();
+        $productOrders = ProductOrder::with(['order', 'order.rating', 'order.user'])->where('product_id', '=', $id)->get();
         $index = 0;
         $averageReviews = 0;
         foreach ($productOrders as $productOrder) {
