@@ -97,7 +97,7 @@ class ProductController extends Controller
                 'status' => 200,
                 'product' => $product,
                 'reviews'=>$productOrders,
-                'averageReviews'=>$averageReviews/$index
+                'averageReviews'=>$averageReviews > 0 ? $averageReviews/$index: 0,
             ], 200);
         }
         else {
