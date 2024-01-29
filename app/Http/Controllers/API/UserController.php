@@ -25,4 +25,18 @@ class UserController extends Controller
             'orders' => $orders
         ], 200);
     }
+
+    public function index() {
+        $users =  User::all();
+        if(!$users) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No users found!'
+            ], 404);
+        }
+        return response()->json([
+            'status' => 200,
+            'users' => $users
+        ], 200);
+    }
 }
