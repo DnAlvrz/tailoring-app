@@ -37,6 +37,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'date_of_birth' => $request->date_of_birth,
             'email' =>  $request->email,
+            "access_level" => 2,
             'password' => Hash::make($request->password)
         ]);
         if($user) {
